@@ -10,7 +10,7 @@ jobs:
       uses: actions/setup-java@v2
       with:
         java-version: '17'
-        distributiob: 'temurin'
+        distribution: 'temurin'
     - name: Setup Maven
       uses: stCarolas/setup-maven@v4.3
       with:
