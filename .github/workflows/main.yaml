@@ -1,7 +1,7 @@
 name: Compile, Test
 on: ["push"]
 env:
-  spring.datasource.url: ${{ secrets.spring_datasource_url }}
+  spring_datasource_url: ${{ secrets.spring_datasource_url }}
 jobs:
   step1:
     runs-on: ubuntu-latest
