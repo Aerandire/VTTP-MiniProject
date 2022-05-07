@@ -12,7 +12,7 @@ jobs:
         java-version: '17'
         distributiob: 'temurin'
     - name: Setup Maven
-      uses: stCarlas/setup-maven@v4.3
+      uses: stCarolas/setup-maven@v4.3
       with:
         maven-version: '3.8.4'
     - name: Run Test
