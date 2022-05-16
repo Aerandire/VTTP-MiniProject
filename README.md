@@ -11,4 +11,4 @@ An application using the [Have I been pwned?](https://haveibeenpwned.com/) servi
 
 
 # Coverage for Pipeline 1:
-![Coverage](https://aer.sgp1.digitaloceanspaces.com/coverage/VTTP-MiniProject/jacoco.svg)
+![Coverage](https://aer.sgp1.digitaloceanspaces.com/coverage/VTTP-MiniProject/jacoco.svg?)
