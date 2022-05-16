@@ -7,4 +7,7 @@ public interface Queries {
     
     public static final String SQL_INSERT_USER = 
         "INSERT INTO user (email,name,password) values (?,?,?)";
+
+    public static final String SQL_DELETE_USER = 
+        "DELETE FROM user WHERE email = ?";
 }
