@@ -15,13 +15,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import vttp.project.keefe.model.CustomUserDetails;
 import vttp.project.keefe.model.User;
 import vttp.project.keefe.repositories.UserRepository;
+import vttp.project.keefe.services.UserService;
 
 @Controller
 @RequestMapping(path="/")
 public class HomeController {
-    
+
     @Autowired
     private UserRepository uRepo;
+    
+    @Autowired
+    private UserService uSvc;
 
     @GetMapping("/")
     public String viewHomePage(){
@@ -35,7 +39,7 @@ public class HomeController {
     }
 
     @PostMapping("/process_register")
-    public String processREgister(User user){
+    public String processRegister(User user){
 
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         String encodedPass = passwordEncoder.encode(user.getPassword());
@@ -52,8 +56,7 @@ public class HomeController {
         Model m){
         
         String userEmail = uDetails.getUsername();
-        User uu = uRepo.findByEmail(userEmail);
-
+        User uu = uSvc.loadUserByEmail(userEmail);
         m.addAttribute("user", uu);
 
         return "dashboard";
@@ -67,6 +70,20 @@ public class HomeController {
             return "login";
         }
  
-        return "redirect:/";
+        return "redirect:/dashboard";
     }
+
+    @GetMapping("/checker")
+    public String viewChecker(
+        @AuthenticationPrincipal CustomUserDetails uDetails, 
+        Model m){
+        
+        String userEmail = uDetails.getUsername();
+        User uu = uSvc.loadUserByEmail(userEmail);
+        m.addAttribute("user", uu);
+
+        return "checker";
+    }
+    
+    
 }

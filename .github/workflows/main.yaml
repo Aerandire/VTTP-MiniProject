@@ -2,6 +2,7 @@ name: Compile, Test
 on: ["push"]
 env:
   spring_datasource_url: ${{ secrets.spring_datasource_url }}
+  hibp_api_key: ${{ secrets.hibp_api_key }}
 jobs:
   step1:
     runs-on: ubuntu-latest

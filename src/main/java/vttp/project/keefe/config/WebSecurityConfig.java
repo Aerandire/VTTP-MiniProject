@@ -41,7 +41,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.authorizeRequests()
+		http.formLogin().loginPage("/login");
+        http.authorizeRequests()
 			.anyRequest().authenticated()
 			.and()
 			.formLogin()
@@ -49,6 +50,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 				.defaultSuccessUrl("/dashboard")
 				.permitAll()
 			.and()
+            .csrf().disable()
 			.logout().logoutSuccessUrl("/").permitAll();
 	}
 }
