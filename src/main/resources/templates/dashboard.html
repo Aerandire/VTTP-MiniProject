@@ -4,41 +4,111 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <html xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
     <title>Dashboard</title>
 </head>
-<body>
-    <div class="container text-center">
+<body class="text-center bg-secondary">
+    <div class="container">
         <h1>PW Storage Zone Dasboard</h1>
-        <h3><a th:href="@{/}">Home</a></h3>
-        <h3><a th:href="@{/dashboard}">Dashboard</a></h3>
-        <h3><a th:href="@{/checker}">Checker</a></h3>
-        <div sec:authorize="isAuthenticated()">
-            <h3><td th:text="${user.name}">User ID</td></h3>
-            <form th:action="@{logout}" method="post">
-                <input type="submit" value="Sign Out" />
-            </form>
+        <div class="nav-scroller py-1 mb-2 bg-light">
+            <nav class="nav d-flex justify-content-between">
+                <a class="p-2 text-muted" th:href="@{/}">Home</a>
+                <a class="p-2 text-muted" th:href="@{/dashboard}">Dashboard</a>
+                <a class="p-2 text-muted" th:href="@{/checker}">Checker</a>
+                <span class="p-2 text-muted d-inline align-baseline"> Current User: <span sec:authorize="isAuthenticated()" class="p-2 text-muted d-inline align-baseline" th:text="${user.name}">User ID</span></span>
+                <form sec:authorize="isAuthenticated()" th:action="@{logout}" method="post">
+                    <input class="p-2 text-muted btn btn-link p-0 m-0 d-inline align-baseline" type="submit" value="Sign Out" />
+                </form>
+            </nav>
+        </div>
+    
+
+    <div class="alert alert-success" role="alert" th:text="${success}" th:if="${success}"></div>
+    <div class="alert alert-danger" role="alert" th:text="${error}" th:if="${error}"></div>
+    
+    <div class="py-5 px-2 bg-light">
+        <div class="row">
+            <div class="col-md-4 ">
+                <div class="card mb-4 box-shadow bg-light">
+                    <div class="card-body">
+                        <form action="/dashboard" th:object="${account}" method="POST">
+                            <input type="hidden" name="userID" th:value="${user.id}"/>
+                            <div class="form-group row">
+                                <label class="col-4 col-form-label">Site Name: </label>
+                                <div>
+                                    <input name="site" th:field="*{site}" type="input" class="form-control" required />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-4 col-form-label">E-mail: </label>
+                                <div>
+                                    <input name="email" th:field="*{email}" type="email" class="form-control" required />
+                                </div>
+                            </div>                   
+                            <div class="form-group row">
+                                <label class="col-4 col-form-label">Password: </label>
+                                <div>
+                                    <input th:field="*{password}" name="password" type="password" class="form-control"
+                                            required minlength="6" maxlength="10"/>
+                                </div>
+                            </div>
+                            <input type="submit" value="Add" />
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div data-th-unless="${#lists.isEmpty(accts)}" data-th-each="acct: ${accts}" class="col-md-4 ">
+                <div class="card mb-4 box-shadow bg-light">
+                    <form  th:object="${account}" method="POST">
+                        <div class="card-body">
+                            <input type="hidden" name="userID" th:value="${acct.userID}"/>
+                            <input type="hidden" name="site" th:value="${acct.site}"/>
+                            <input type="hidden" name="email" th:value="${acct.email}"/>
+                            <input type="hidden" name="password" th:value="${acct.password}"/>
+                            <div class="form-group row">
+                                <label class="col-4 col-form-label">Site Name: </label>
+                                <div>
+                                    <input type="input" class="form-control-plaintext" data-th-value="${acct.site}"/>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-4 col-form-label">Email: </label>
+                                <div>
+                                    <input type="input" class="form-control-plaintext" data-th-value="${acct.email}"/>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-4 col-form-label">Password: </label>
+                                <div>
+                                    <input class="form-control-plaintext" type="password" onclick="myFunction(this)" data-th-value="${acct.password}">
+                                </div>
+                            </div>                       
+                            <tr>
+                                <td>
+                                    <input type="submit" formaction="dashboard/delete" value="Delete" />
+                                    <input type="submit" formaction="dashboard/checkUP" value="Check" />
+                                </td>
+                            </tr>
+                        </div>
+                    </form>
+                </div>
+
+                
+            </div>
         </div>
     </div>
-    <div class="container text-left">
-        <form data-th-action="|/addAccount|" method="post">
-            <div class="form-group row">
-                <label class="col-4 col-form-label">E-mail: </label>
-                <div class="col-8">
-                    <input name="email" type="email" class="form-control" required />
-                </div>
-            </div>
-             
-            <div class="form-group row">
-                <label class="col-4 col-form-label">Password: </label>
-                <div class="col-8">
-                    <input name="password" type="password" class="form-control"
-                            required minlength="6" maxlength="10"/>
-                </div>
-            </div>
-            <input type="submit" value="Add" />
-        </form>
-    </div>
+    </div>  
+    <script>
+        function myFunction(element) {
+          var x = element;
+          if (x.type === "password") {
+            x.type = "text";
+          } else {
+            x.type = "password";
+          }
+        }
+    </script>
 </body>
 </html>

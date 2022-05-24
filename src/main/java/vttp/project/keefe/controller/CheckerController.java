@@ -6,6 +6,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,6 +26,18 @@ public class CheckerController {
 
     @Autowired
     private HIPBService hSvc;
+
+    @GetMapping
+    public String viewChecker(
+        @AuthenticationPrincipal CustomUserDetails uDetails, 
+        Model m){
+        
+        String userEmail = uDetails.getUsername();
+        User uu = uSvc.loadUserByEmail(userEmail);
+        m.addAttribute("user", uu);
+
+        return "checker";
+    }
     
     @PostMapping(consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public String checkAccount(@AuthenticationPrincipal CustomUserDetails uDetails,
@@ -39,9 +52,9 @@ public class CheckerController {
         m.addAttribute("email", email);
         
         Pwned pwnDomains = hSvc.getResult(email);
-
         m.addAttribute("pwnDomains", pwnDomains);
 
         return "results";
     }
+
 }

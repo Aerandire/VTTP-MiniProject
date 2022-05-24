@@ -16,5 +16,14 @@ public class UserService {
         User user  = uRepo.findByEmail(email);
         return user;
     }
+
+    public boolean saveUser(User usr){       
+        Boolean saved = uRepo.save(usr);
+
+        if(saved != true)
+            return false;
+        else
+            return true;
+    }
     
 }

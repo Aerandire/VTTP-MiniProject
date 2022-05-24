@@ -8,11 +8,10 @@
     <html xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5"></html>
     <title>Home</title>
 </head>
-<body>
-    <div class="container text-center">
+<body class="text-center bg-secondary">
+    <div class="container">
         <h1>Welcome to PW Storage Zone</h1>
-        <h3><a th:href="@{register}">Register</a></h3>
-        <h3><a th:href="@{login}">Login</a></h3>
+        <h3><a class="m-5 p-5" th:href="@{register}">Register</a><a class="m-5 p-5" th:href="@{login}">Login</a></h3>
     </div>
 </body>
 </html>

@@ -3,7 +3,6 @@ package vttp.project.keefe.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -12,17 +11,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import vttp.project.keefe.model.CustomUserDetails;
 import vttp.project.keefe.model.User;
-import vttp.project.keefe.repositories.UserRepository;
 import vttp.project.keefe.services.UserService;
 
 @Controller
 @RequestMapping(path="/")
 public class HomeController {
-
-    @Autowired
-    private UserRepository uRepo;
     
     @Autowired
     private UserService uSvc;
@@ -45,25 +39,16 @@ public class HomeController {
         String encodedPass = passwordEncoder.encode(user.getPassword());
         user.setPassword(encodedPass);
 
-        uRepo.save(user);
+        boolean result = uSvc.saveUser(user);
+        if(result != true)
+            return "error_saving";
+        else
+            return "registration_success";
 
-        return "registration_success";
-    }
-
-    @GetMapping("/dashboard")
-    public String viewDashboard(
-        @AuthenticationPrincipal CustomUserDetails uDetails, 
-        Model m){
-        
-        String userEmail = uDetails.getUsername();
-        User uu = uSvc.loadUserByEmail(userEmail);
-        m.addAttribute("user", uu);
-
-        return "dashboard";
     }
 
     @GetMapping("/login")
-    public String showLoginForm(Model model) {
+    public String showLoginForm() {
          
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || authentication instanceof AnonymousAuthenticationToken) {
@@ -71,19 +56,5 @@ public class HomeController {
         }
  
         return "redirect:/dashboard";
-    }
-
-    @GetMapping("/checker")
-    public String viewChecker(
-        @AuthenticationPrincipal CustomUserDetails uDetails, 
-        Model m){
-        
-        String userEmail = uDetails.getUsername();
-        User uu = uSvc.loadUserByEmail(userEmail);
-        m.addAttribute("user", uu);
-
-        return "checker";
-    }
-    
-    
+    }    
 }

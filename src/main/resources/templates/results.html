@@ -8,22 +8,33 @@
     <html xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
     <title>Check Results</title>
 </head>
-<body>
-    <div class="container text-center">
-        <h1>PW Storage Zone Dasboard</h1>
-        <h3><a th:href="@{/}">Home</a></h3>
-        <h3><a th:href="@{/dashboard}">Dashboard</a></h3>
-        <h3><a th:href="@{/checker}">Checker</a></h3>
-        <div sec:authorize="isAuthenticated()">
-            <h3><td th:text="${user.name}">User ID</td></h3> 
-           <form th:action="@{logout}" method="post">
-               <input type="submit" value="Sign Out" />
-           </form>
-       </div>
-    </div>
-        <div>Email: <td data-th-text="${email}">User ID</td> </div>
+<body class="bg-secondary">
+    <div class="container">
+        <h1>PW Storage Zone Checker Results</h1>
+        <div class="nav-scroller py-1 mb-2 bg-light">
+            <nav class="nav d-flex justify-content-between">
+                <a class="p-2 text-muted" th:href="@{/}">Home</a>
+                <a class="p-2 text-muted" th:href="@{/dashboard}">Dashboard</a>
+                <a class="p-2 text-muted" th:href="@{/checker}">Checker</a>
+                <span class="p-2 text-muted d-inline align-baseline"> Current User: <span sec:authorize="isAuthenticated()" class="p-2 text-muted d-inline align-baseline" th:text="${user.name}">User ID</span></span>
+                <form sec:authorize="isAuthenticated()" th:action="@{logout}" method="post">
+                    <input class="p-2 text-muted btn btn-link p-0 m-0 d-inline align-baseline" type="submit" value="Sign Out" />
+                </form>
+            </nav>
+        </div>
+    
+        <h2><div class="font-weight-bold">Email: <td data-th-text="${email}">User ID</td></div></h2>
         <br>
-        <div>Result : </div>
-        <div data-th-each="n : ${pwnDomains.name}" data-th-text="${n}"></div>
+        <h4><div class="font-weight-bold">Result : </div></h4>
+        <tr class="text-left" th:each="n : ${pwnDomains}" >
+            <td data-th-each="i: ${#numbers.sequence(0, n.name.size())}">
+                <img data-th-src="${n.logo[i]}" width="auto" height="50">
+                <div th:text="${n.name[i]}"></div>
+                <div data-th-text="${n.date[i]}"></div>
+                <p data-th-utext="${n.desc[i]}"></p>
+            </td>
+        </tr>
+    </div>
+   
 </body>
 </html>

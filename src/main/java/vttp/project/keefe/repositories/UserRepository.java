@@ -35,6 +35,7 @@ public class UserRepository {
         usr.setEmail(email);
         usr.setName(rs.getString("name"));
         usr.setPassword(rs.getString("password"));
+        usr.setId(rs.getLong("id"));
         return usr;    
     }
     

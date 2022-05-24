@@ -1,19 +1,11 @@
 package vttp.project.keefe.model;
 
-public class User {
-    
-    private Long id;
+public class Accounts {
     private String email;
     private String password;
-    private String name;
-
+    private String site;
+    private Long userID;
     
-    public Long getId() {
-        return id;
-    }
-    public void setId(Long id) {
-        this.id = id;
-    }
     public String getEmail() {
         return email;
     }
@@ -26,11 +18,19 @@ public class User {
     public void setPassword(String password) {
         this.password = password;
     }
-    public String getName() {
-        return name;
+    public String getSite() {
+        return site;
     }
-    public void setName(String name) {
-        this.name = name;
+    public void setSite(String site) {
+        this.site = site;
+    }
+    public Long getUserID() {
+        return userID;
+    }
+    public void setUserID(Long userID) {
+        this.userID = userID;
     }
 
+    
+    
 }

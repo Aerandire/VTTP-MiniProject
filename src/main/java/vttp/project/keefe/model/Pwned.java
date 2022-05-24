@@ -3,7 +3,6 @@ package vttp.project.keefe.model;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -14,10 +13,9 @@ import jakarta.json.JsonReader;
 
 public class Pwned {
     public List<String> name;
-    public String desc;
-    public Date date;
-    public String logo;
-    public List<String> dataTypes;
+    public List<String> desc;
+    public List<String> date;
+    public List<String> logo;
 
     public List<String> getName() {
         return name;
@@ -25,46 +23,49 @@ public class Pwned {
     public void setName(List<String> name) {
         this.name = name;
     }
-    public String getDesc() {
+    public List<String> getDesc() {
         return desc;
     }
-    public void setDesc(String desc) {
+    public void setDesc(List<String> desc) {
         this.desc = desc;
     }
-    public Date getDate() {
+    public List<String> getDate() {
         return date;
     }
-    public void setDate(Date date) {
+    public void setDate(List<String> date) {
         this.date = date;
     }
-    public String getLogo() {
+    public List<String> getLogo() {
         return logo;
     }
-    public void setLogo(String logo) {
+    public void setLogo(List<String> logo) {
         this.logo = logo;
-    }
-    public List<String> getDataTypes() {
-        return dataTypes;
-    }
-    public void setDataTypes(List<String> dataTypes) {
-        this.dataTypes = dataTypes;
     }
 
     public static Pwned create(String json) {
         Pwned pwn = new Pwned();
         try(InputStream is = new ByteArrayInputStream(json.getBytes())){
             JsonReader reader = Json.createReader(is);
-            //JsonObject o = reader.readObject();
             JsonArray returnNames = reader.readArray();
   
             List<String> names = new LinkedList<>();
+            List<String> desc = new LinkedList<>();
+            List<String> logo = new LinkedList<>();
+            List<String> date = new LinkedList<>();
+
             for(int i=0; i<returnNames.size(); i++)
             {
                 JsonObject o = returnNames.getJsonObject(i);
                 names.add(o.getString("Name"));
+                desc.add(o.getString("Description"));
+                logo.add(o.getString("LogoPath"));
+                date.add(o.getString("BreachDate"));
+          
             }                   
                 pwn.setName(names);
-            
+                pwn.setDesc(desc);
+                pwn.setLogo(logo);
+                pwn.setDate(date);   
 
         } catch(IOException ex){
             ex.printStackTrace();

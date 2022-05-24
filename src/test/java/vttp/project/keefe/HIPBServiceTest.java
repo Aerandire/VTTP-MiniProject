@@ -1,6 +1,7 @@
 package vttp.project.keefe;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -23,6 +24,15 @@ public class HIPBServiceTest {
 		Pwned pwnDomains = hSvc.getResult(email);
 		
 		assertNotNull(pwnDomains.name);
+	}
+
+	@Test
+	void testCheckerAcc(){
+		String email = "abc@abc.com";
+		String pw = "123456";
+		Boolean pwned = hSvc.pwnedOrNot(email,pw);
+		
+		assertTrue(pwned);
 	}
 
     
