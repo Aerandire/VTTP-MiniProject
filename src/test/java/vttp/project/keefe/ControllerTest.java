@@ -1,5 +1,6 @@
 package vttp.project.keefe;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
@@ -13,6 +14,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestBuilders.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
+
+import vttp.project.keefe.model.CustomUserDetails;
 import vttp.project.keefe.model.User;
 import vttp.project.keefe.services.UserService;
 
@@ -36,12 +41,26 @@ public class ControllerTest {
 
     @Test
     void TestGetLogin() throws Exception{
-        this.mockMVC.perform(MockMvcRequestBuilders.get("/login")).andReturn();
+        MvcResult rs = this.mockMVC.perform(formLogin("/login").user("email","bob@email.com").password("password","asdqwe")).andReturn();
+        String viewName = rs.getResponse().getRedirectedUrl();
+
+        assertTrue(viewName.equals("/dashboard"));
+    }
+
+    @Test
+    void TestgetLoginLoggedin() throws Exception{
+        MvcResult rs = this.mockMVC.perform(MockMvcRequestBuilders.get("/login").with(user("bob@email.com").password("asdqwe"))).andReturn();
+        String viewName = rs.getResponse().getRedirectedUrl();
+
+        assertTrue(viewName.equals("/dashboard"));
     }
 
     @Test
     void TestGetRegister() throws Exception{
-        this.mockMVC.perform(MockMvcRequestBuilders.get("/register")).andReturn();
+        User user = new User();
+        MvcResult rs = this.mockMVC.perform(MockMvcRequestBuilders.get("/register",user)).andReturn();
+        String viewName = rs.getResponse().getContentAsString();
+        assertNotNull(viewName);
     }
 
     @Test
@@ -54,14 +73,24 @@ public class ControllerTest {
         boolean result = true;
         Mockito.when(uSvc.saveUser(user)).thenReturn(result);
 
-        this.mockMVC.perform(MockMvcRequestBuilders.post("/process_register")).andReturn();
- 
+        //MvcResult rs = this.mockMVC.perform(MockMvcRequestBuilders.post("/process_register").with(user("bob@email.com").password("asdqwe"))).andReturn();
+        //String viewName = rs.getResponse().getRedirectedUrl();
+        //assertTrue(viewName.equals("/success_registration"));
         
     }
 
     @Test
     void TestGetDashboard() throws Exception{
-        this.mockMVC.perform(MockMvcRequestBuilders.get("/dashboard")).andReturn();
+        User user = new User();
+        user.setEmail("bob@email.com");
+        user.setName("abc");
+        user.setPassword("tester123");
+        CustomUserDetails uDetails = new CustomUserDetails(user);
+
+        //this.mockMVC.perform(MockMvcRequestBuilders.get("/dashboard",uDetails).with(user("bob@email.com").password("asdqwe"))).andReturn();
+        //String viewName = rs.getResponse().getRedirectedUrl();
+
+        //assertTrue(viewName.equals("/dashboard"));
     }
 
     @Test

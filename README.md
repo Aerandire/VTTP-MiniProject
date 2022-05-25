@@ -10,7 +10,7 @@ An application using the [Have I been pwned?](https://haveibeenpwned.com/) servi
 [![Compile, Test](https://github.com/Aerandire/VTTP-MiniProject/actions/workflows/deploys.yaml/badge.svg)](https://github.com/Aerandire/VTTP-MiniProject/actions/workflows/deploys.yaml)
 
 # Coverage for Pipeline 1:
-![Coverage](https://aer.sgp1.digitaloceanspaces.com/coverage/VTTP-MiniProject/jacoco.svg?)
+![Coverage](https://aer.sgp1.digitaloceanspaces.com/coverage/VTTP-MiniProject/jacoco.svg?maxAge=10)
 
 # Link to Application
 [Link to deployed APP](https://vttp-miniproj-keefe.herokuapp.com/)
