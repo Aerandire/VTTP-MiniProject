@@ -17,8 +17,13 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestBuilders.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
 
+import java.util.LinkedList;
+import java.util.List;
+
+import vttp.project.keefe.model.Accounts;
 import vttp.project.keefe.model.CustomUserDetails;
 import vttp.project.keefe.model.User;
+import vttp.project.keefe.services.AccountsService;
 import vttp.project.keefe.services.UserService;
 
 @SpringBootTest
@@ -30,6 +35,9 @@ public class ControllerTest {
 
     @MockBean
     private UserService uSvc;
+
+    @MockBean
+    private AccountsService acctSvc;
 
     @Test
     void TestGetIndex() throws Exception{
@@ -86,20 +94,39 @@ public class ControllerTest {
         user.setName("abc");
         user.setPassword("tester123");
         CustomUserDetails uDetails = new CustomUserDetails(user);
+        List<Accounts> accts = new LinkedList<>();
+        Mockito.when(acctSvc.getAccounts(user.getId())).thenReturn(accts);
+        
+        this.mockMVC.perform(MockMvcRequestBuilders.multipart("/dashboard",uDetails).with(user("bob@email.com").password("asdqwe"))).andReturn();
 
-        //this.mockMVC.perform(MockMvcRequestBuilders.get("/dashboard",uDetails).with(user("bob@email.com").password("asdqwe"))).andReturn();
-        //String viewName = rs.getResponse().getRedirectedUrl();
-
-        //assertTrue(viewName.equals("/dashboard"));
     }
 
     @Test
-    void TestPostDashboard() throws Exception{
-        this.mockMVC.perform(MockMvcRequestBuilders.post("/dashboard")).andReturn();
+    void TestProcessRegister() throws Exception{
+        User user = new User();
+        user.setEmail("dfeee@test.com");
+        user.setName("abc");
+        user.setPassword("tester123");
+
+        boolean result = true;
+        Mockito.when(uSvc.saveUser(user)).thenReturn(result);
+
+        MvcResult rs = this.mockMVC.perform(MockMvcRequestBuilders.multipart("/process_register",user)).andReturn();
+        //String viewName = rs.getResponse().getRedirectedUrl();
+
+        //assertTrue(viewName.equals("/registration_success"));
     }
 
     @Test
     void TestGetChecker() throws Exception{
-        this.mockMVC.perform(MockMvcRequestBuilders.get("/checker")).andReturn();
+        User user = new User();
+        user.setEmail("bob@email.com");
+        user.setName("abc");
+        user.setPassword("tester123");
+        CustomUserDetails uDetails = new CustomUserDetails(user);
+        User uu = new User();
+        Mockito.when(uSvc.loadUserByEmail(user.getEmail())).thenReturn(uu);
+        
+        this.mockMVC.perform(MockMvcRequestBuilders.multipart("/checker",uDetails).with(user("bob@email.com").password("asdqwe"))).andReturn();
     }
 }
